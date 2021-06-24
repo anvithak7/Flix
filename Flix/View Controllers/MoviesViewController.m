@@ -22,6 +22,7 @@
 @property (nonatomic, strong) NSArray *movies; // Creates a private instance variable with a getter and setter method.
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
 
 @end
 
@@ -40,6 +41,8 @@
 }
 
 - (void)fetchMovies {
+    // The loading indicator starts up when something is loading/fetching from network.
+    [self.loadingIndicator startAnimating];
     NSURL *url = [NSURL URLWithString:@"https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed"];
     // In the above, whichever URL you want to get data from.
     NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10.0];
@@ -51,6 +54,35 @@
         // The lines below happen once the network call is finished.
         // Network call has to be done in the background, or in the foreground thread would feel like user was frozen.
            if (error != nil) {
+               UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Unable to Load Movies" message:@"The internet connection appears to be offline. Please reconnect and try again!" preferredStyle:(UIAlertControllerStyleAlert)];
+               
+               UIAlertAction *tryAgainAction = [UIAlertAction actionWithTitle:@"Try Again"
+                                                                   style:UIAlertActionStyleDefault
+                                                                 handler:^(UIAlertAction * _Nonnull action) { [self fetchMovies];
+                   // handle cancel response here. Doing nothing will dismiss the view.
+                                                                 }];
+               [alert addAction:tryAgainAction];
+               
+               // The below was the given code, but I wanted to do a try again button instead! (above)
+               /*// create a cancel action
+               UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                                   style:UIAlertActionStyleCancel
+                                                                 handler:^(UIAlertAction * _Nonnull action) {
+                                                                        // handle cancel response here. Doing nothing will dismiss the view.
+                                                                 }];
+               // add the cancel action to the alertController
+               [alert addAction:cancelAction];
+               // create an OK action
+               UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                  style:UIAlertActionStyleDefault
+                                                                handler:^(UIAlertAction * _Nonnull action) {
+                                                                        // handle response here.
+                                                                }];
+               // add the OK action to the alert controller
+               [alert addAction:okAction]; */
+               [self presentViewController:alert animated:YES completion:^{
+                   // optional code for what happens after the alert controller has finished presenting
+               }];
                NSLog(@"%@", [error localizedDescription]); // If there's an error, print it out.
            }
            else { // The API gave us something back! In the form of a dictionary!
@@ -67,6 +99,7 @@
                // Reload your table view data
            }
         [self.refreshControl endRefreshing];
+        [self.loadingIndicator stopAnimating];
        }];
     [task resume];
 }
@@ -82,6 +115,8 @@
     MovieCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MovieCell"];
     // Separate note: UITableViewCell *cell = [[UITableViewCell alloc] init]; means allocate space for the TableViewCell and then initialize it (no default init).
     // Below, we're setting all the values in each cell by taking the appropriate value from the dictionary for each movie.
+    // The loading indicator pops up when the images and cell values are loading.
+    [self.loadingIndicator startAnimating];
     NSDictionary *movie = self.movies[indexPath.row];
     cell.titleLabel.text = movie[@"title"];
     cell.synopsisLabel.text = movie[@"overview"];
@@ -91,6 +126,7 @@
     NSURL *posterURL = [NSURL URLWithString:fullPosterURLString];
     cell.posterView.image = nil; // Clear out the previous one before downloading the new one.
     [cell.posterView setImageWithURL:posterURL];
+    [self.loadingIndicator stopAnimating];
     return cell;
 }
 

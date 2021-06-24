@@ -15,7 +15,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *synopsisLabel;
 @property (weak, nonatomic) IBOutlet UILabel *releaseLabel;
 @property (weak, nonatomic) IBOutlet UILabel *ratingLabel;
-@property (weak, nonatomic) IBOutlet UILabel *viewerLabel;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator1;
 
 @end
 
@@ -25,6 +25,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     // Will later put the below in a model class (later lab).
+    [self.loadingIndicator1 startAnimating];
     NSString *baseURLString = @"https:image.tmdb.org/t/p/w500";
     NSString *backdropURLString = self.movie[@"backdrop_path"];
     NSString *posterURLString = self.movie[@"poster_path"];
@@ -41,18 +42,17 @@
     self.synopsisLabel.text = self.movie[@"overview"];
     self.releaseLabel.text = self.movie[@"release_date"];
     // I know the below is highly inefficient; will figure out a better way later. This is brute force for now!
+    // Question: is there a faster way of multiple string concatenations?
     NSString *voteAverage = [NSString stringWithFormat: @"%@", self.movie[@"vote_average"]];
     NSString *ratedAndVotes = [@"Rated " stringByAppendingString:voteAverage];
     NSString *ratedAndVotesBy = [ratedAndVotes stringByAppendingString:@" by "];
     NSString *ratedAndVotesByNumber = [ratedAndVotesBy stringByAppendingString:[NSString stringWithFormat: @"%@", self.movie[@"vote_count"]]];
     NSString *ratedAndVotesByNumberViewers = [ratedAndVotesByNumber stringByAppendingString:@" viewers"];
-    //self.ratingLabel.text = [NSString stringWithFormat: @"%@", self.movie[@"vote_average"]];
-    // NSString *viewerCount = [NSString stringWithFormat: @"%@", self.movie[@"vote_count"]];
-    // self.viewerLabel.text = [viewerCount stringByAppendingString:@" viewers"];
     self.ratingLabel.text = ratedAndVotesByNumberViewers;
-    [self.titleLabel sizeToFit];
+    [self.titleLabel sizeToFit]; //Expand the boxes to fit in more text!
     [self.synopsisLabel sizeToFit];
     [self.ratingLabel sizeToFit];
+    [self.loadingIndicator1 stopAnimating];
 }
 
 /*
