@@ -40,11 +40,19 @@
     self.titleLabel.text = self.movie[@"title"];
     self.synopsisLabel.text = self.movie[@"overview"];
     self.releaseLabel.text = self.movie[@"release_date"];
-    //self.ratingLabel.text = self.movie[@"vote_average"];
-    //NSString *viewerCount = self.movie[@"vote_count"];
-    //self.viewerLabel.text = [viewerCount stringByAppendingString:@" viewers"];
+    // I know the below is highly inefficient; will figure out a better way later. This is brute force for now!
+    NSString *voteAverage = [NSString stringWithFormat: @"%@", self.movie[@"vote_average"]];
+    NSString *ratedAndVotes = [@"Rated " stringByAppendingString:voteAverage];
+    NSString *ratedAndVotesBy = [ratedAndVotes stringByAppendingString:@" by "];
+    NSString *ratedAndVotesByNumber = [ratedAndVotesBy stringByAppendingString:[NSString stringWithFormat: @"%@", self.movie[@"vote_count"]]];
+    NSString *ratedAndVotesByNumberViewers = [ratedAndVotesByNumber stringByAppendingString:@" viewers"];
+    //self.ratingLabel.text = [NSString stringWithFormat: @"%@", self.movie[@"vote_average"]];
+    // NSString *viewerCount = [NSString stringWithFormat: @"%@", self.movie[@"vote_count"]];
+    // self.viewerLabel.text = [viewerCount stringByAppendingString:@" viewers"];
+    self.ratingLabel.text = ratedAndVotesByNumberViewers;
     [self.titleLabel sizeToFit];
     [self.synopsisLabel sizeToFit];
+    [self.ratingLabel sizeToFit];
 }
 
 /*
