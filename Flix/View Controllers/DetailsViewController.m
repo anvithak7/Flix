@@ -84,19 +84,103 @@
 }
 
 - (void)loadBackdropImage:(NSString*)backdropURLString {
-    NSString *baseURLString = @"https:image.tmdb.org/t/p/w500"; // We need the base URL in any case.
+    /*NSString *baseURLString = @"https:image.tmdb.org/t/p/w500"; // We need the base URL in any case.
     NSString *fullBackdropURLString = [baseURLString stringByAppendingString:backdropURLString];
-    NSURL *backdropURL = [NSURL URLWithString:fullBackdropURLString];
+    NSURL *backdropURL = [NSURL URLWithString:fullBackdropURLString]; */ //Older version (one time only).
+    
+    // The below loads low resolution first, and then high resolution photos.
     self.backdropView.image = nil;
-    [self.backdropView setImageWithURL:backdropURL];
+    NSString *lowBaseURLString = @"https://image.tmdb.org/t/p/w45";
+    NSString *highBaseURLString = @"https://image.tmdb.org/t/p/original";
+    NSString *fullLowURLString = [lowBaseURLString stringByAppendingString:backdropURLString];
+    NSString *fullHighURLString = [highBaseURLString stringByAppendingString:backdropURLString];
+    NSURL *urlSmall = [NSURL URLWithString:fullLowURLString];
+    NSURL *urlLarge = [NSURL URLWithString:fullHighURLString];
+    NSURLRequest *requestSmall = [NSURLRequest requestWithURL:urlSmall];
+    NSURLRequest *requestLarge = [NSURLRequest requestWithURL:urlLarge];
+
+    __weak DetailsViewController *weakSelf = self;
+
+    [self.backdropView setImageWithURLRequest:requestSmall
+                          placeholderImage:nil
+                                   success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *smallImage) {
+                                       // smallImageResponse will be nil if the smallImage is already available
+                                       // in cache (might want to do something smarter in that case).
+                                       weakSelf.backdropView.alpha = 0.0;
+                                       weakSelf.backdropView.image = smallImage;
+                                       
+                                       [UIView animateWithDuration:0.1
+                                                        animations:^{
+                                                            
+                                                            weakSelf.backdropView.alpha = 1.0;
+                                                            
+                                                        } completion:^(BOOL finished) {
+                                                            // The AFNetworking ImageView Category only allows one request to be sent at a time
+                                                            // per ImageView. This code must be in the completion block.
+                                                            [weakSelf.backdropView setImageWithURLRequest:requestLarge
+                                                                                  placeholderImage:smallImage
+                                                                                           success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage * largeImage) {
+                                                                                                weakSelf.backdropView.image = largeImage;
+                                                                                  }
+                                                                                           failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                                                                                               // do something for the failure condition of the large image request
+                                                                                               // possibly setting the ImageView's image to a default image
+                                                                                           }];
+                                                        }];
+                                   }
+                                   failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                                       // do something for the failure condition
+                                       // possibly try to get the large image
+                                   }];
 }
 
 - (void) loadPosterImage:(NSString*)posterURLString {
-    NSString *baseURLString = @"https:image.tmdb.org/t/p/w500"; // We need the base URL in any case.
+    /*NSString *baseURLString = @"https:image.tmdb.org/t/p/w500"; // We need the base URL in any case.
     NSString *fullPosterURLString = [baseURLString stringByAppendingString:posterURLString];
-    NSURL *posterURL = [NSURL URLWithString:fullPosterURLString];
+    NSURL *posterURL = [NSURL URLWithString:fullPosterURLString]; */
     self.posterView.image = nil; // Clear out the previous one before downloading the new one.
-    [self.posterView setImageWithURL:posterURL];
+    NSString *lowBaseURLString = @"https://image.tmdb.org/t/p/w45";
+    NSString *highBaseURLString = @"https://image.tmdb.org/t/p/original";
+    NSString *fullLowURLString = [lowBaseURLString stringByAppendingString:posterURLString];
+    NSString *fullHighURLString = [highBaseURLString stringByAppendingString:posterURLString];
+    NSURL *urlSmall = [NSURL URLWithString:fullLowURLString];
+    NSURL *urlLarge = [NSURL URLWithString:fullHighURLString];
+    NSURLRequest *requestSmall = [NSURLRequest requestWithURL:urlSmall];
+    NSURLRequest *requestLarge = [NSURLRequest requestWithURL:urlLarge];
+
+    __weak DetailsViewController *weakSelf = self;
+
+    [self.posterView setImageWithURLRequest:requestSmall
+                          placeholderImage:nil
+                                   success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *smallImage) {
+                                       // smallImageResponse will be nil if the smallImage is already available
+                                       // in cache (might want to do something smarter in that case).
+                                       weakSelf.posterView.alpha = 0.0;
+                                       weakSelf.posterView.image = smallImage;
+                                       
+                                       [UIView animateWithDuration:0.1
+                                                        animations:^{
+                                                            
+                                                            weakSelf.posterView.alpha = 1.0;
+                                                            
+                                                        } completion:^(BOOL finished) {
+                                                            // The AFNetworking ImageView Category only allows one request to be sent at a time
+                                                            // per ImageView. This code must be in the completion block.
+                                                            [weakSelf.posterView setImageWithURLRequest:requestLarge
+                                                                                  placeholderImage:smallImage
+                                                                                           success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage * largeImage) {
+                                                                                                weakSelf.posterView.image = largeImage;
+                                                                                  }
+                                                                                           failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                                                                                               // do something for the failure condition of the large image request
+                                                                                               // possibly setting the ImageView's image to a default image
+                                                                                           }];
+                                                        }];
+                                   }
+                                   failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                                       // do something for the failure condition
+                                       // possibly try to get the large image
+                                   }];
 }
 
 /*
