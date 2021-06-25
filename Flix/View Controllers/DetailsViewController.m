@@ -51,6 +51,7 @@
     self.ratingLabel.text = ratedAndVotesByNumberViewers;
     [self.titleLabel sizeToFit]; //Expand the boxes to fit in more text!
     [self.synopsisLabel sizeToFit];
+    [self.releaseLabel sizeToFit];
     [self.ratingLabel sizeToFit];
     [self.loadingIndicator1 stopAnimating];
 }
