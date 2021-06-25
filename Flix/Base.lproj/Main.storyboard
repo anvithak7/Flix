@@ -86,7 +86,7 @@
             </objects>
             <point key="canvasLocation" x="138" y="818"/>
         </scene>
-        <!--Movies Grid View Controller-->
+        <!--Popular Movies-->
         <scene sceneID="a1C-T2-CNR">
             <objects>
                 <viewController id="v9q-0j-dSY" customClass="MoviesGridViewController" sceneMemberID="viewController">
@@ -122,6 +122,7 @@
                                         <size key="customSize" width="134" height="198"/>
                                         <connections>
                                             <outlet property="gridPosterView" destination="vXQ-ns-Y2n" id="p4v-ky-UkR"/>
+                                            <segue destination="vFt-CO-05Z" kind="show" id="OKP-iy-ClS"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -130,7 +131,7 @@
                         <viewLayoutGuide key="safeArea" id="Yp0-Kx-sXT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="6RJ-R8-roy"/>
+                    <navigationItem key="navigationItem" title="Popular Movies" id="6RJ-R8-roy"/>
                     <connections>
                         <outlet property="collectionView" destination="ZcQ-5M-aVz" id="WbR-8x-d1s"/>
                     </connections>
@@ -198,20 +199,20 @@
                                                 <rect key="frame" x="1" y="1" width="156" height="219"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No Image Available" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3b3-80-Odt">
+                                                <rect key="frame" x="10" y="101" width="139" height="18"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Released on" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QWR-7P-swB">
-                                        <rect key="frame" x="190" y="271" width="79" height="17"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Title" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LUl-3s-EkB">
+                                        <rect key="frame" x="190" y="215" width="210" height="48"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tBp-Yd-IB4">
-                                        <rect key="frame" x="276" y="271" width="76" height="17"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="23"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -235,10 +236,17 @@
                                         <color key="backgroundColor" systemColor="systemGray3Color"/>
                                         <color key="color" red="0.78594720363616943" green="0.88870209455490112" blue="0.94672971963882446" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </activityIndicatorView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Title" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LUl-3s-EkB">
-                                        <rect key="frame" x="190" y="215" width="210" height="48"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No Image Available" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qAF-ax-ySo">
+                                        <rect key="frame" x="137" y="92" width="163" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="23"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Released On Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tBp-Yd-IB4">
+                                        <rect key="frame" x="190" y="271" width="210" height="17"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -252,8 +260,10 @@
                     </scrollView>
                     <navigationItem key="navigationItem" title="Details" id="p6h-dN-K4d"/>
                     <connections>
+                        <outlet property="backdropNoImageLabel" destination="qAF-ax-ySo" id="3gW-pa-qBP"/>
                         <outlet property="backdropView" destination="8sf-EG-cJJ" id="X2P-3c-Wvk"/>
                         <outlet property="loadingIndicator1" destination="mKh-sh-6CD" id="wsw-gy-9OI"/>
+                        <outlet property="posterNoImageLabel" destination="3b3-80-Odt" id="7sU-38-l2N"/>
                         <outlet property="posterView" destination="AcN-8n-1cy" id="hhm-DX-h6x"/>
                         <outlet property="ratingLabel" destination="GWV-vw-jUj" id="FRT-3V-tjQ"/>
                         <outlet property="releaseLabel" destination="tBp-Yd-IB4" id="SkF-1D-7Dh"/>
@@ -263,7 +273,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8tt-o9-jlU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="137.68115942028987" y="1498.6607142857142"/>
+            <point key="canvasLocation" x="137.68115942028987" y="1550.8928571428571"/>
         </scene>
         <!--Now Playing-->
         <scene sceneID="91c-m1-g8u">
@@ -285,6 +295,9 @@
             <point key="canvasLocation" x="137.68115942028987" y="130.58035714285714"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="96J-Xg-akz"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <image name="now_playing_tabbar_item" width="21" height="21"/>
         <image name="projector_tabbar_item" width="21" height="25"/>

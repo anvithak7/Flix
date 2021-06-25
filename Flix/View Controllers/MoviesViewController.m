@@ -34,6 +34,7 @@
     // Do any additional setup after loading the view.
     self.tableView.dataSource = self ; // The view controller is the data source and delegate!
     self.tableView.delegate = self;
+    [self.loadingIndicator startAnimating];
     [self fetchMovies];
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(fetchMovies) forControlEvents:UIControlEventValueChanged];
@@ -42,7 +43,6 @@
 
 - (void)fetchMovies {
     // The loading indicator starts up when something is loading/fetching from network.
-    [self.loadingIndicator startAnimating];
     NSURL *url = [NSURL URLWithString:@"https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed"];
     // In the above, whichever URL you want to get data from.
     NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10.0];
