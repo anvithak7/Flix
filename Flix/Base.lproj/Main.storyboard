@@ -22,7 +22,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="MovieCell" rowHeight="177" id="c7N-MP-afQ" customClass="MovieCell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="gray" indentationWidth="10" reuseIdentifier="MovieCell" rowHeight="177" id="c7N-MP-afQ" customClass="MovieCell">
                                         <rect key="frame" x="0.0" y="24.5" width="414" height="177"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="c7N-MP-afQ" id="MTR-f6-7by">
@@ -86,7 +86,7 @@
             </objects>
             <point key="canvasLocation" x="138" y="818"/>
         </scene>
-        <!--Movies-->
+        <!--Popular Movies-->
         <scene sceneID="a1C-T2-CNR">
             <objects>
                 <viewController id="v9q-0j-dSY" customClass="MoviesGridViewController" sceneMemberID="viewController">
@@ -136,7 +136,7 @@
                         <viewLayoutGuide key="safeArea" id="Yp0-Kx-sXT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Movies" id="6RJ-R8-roy"/>
+                    <navigationItem key="navigationItem" title="Popular Movies" id="6RJ-R8-roy"/>
                     <connections>
                         <outlet property="collectionView" destination="ZcQ-5M-aVz" id="WbR-8x-d1s"/>
                         <outlet property="movieSearchBar" destination="PSB-M9-SFu" id="M4U-ar-gxX"/>
@@ -302,7 +302,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="OKP-iy-ClS"/>
+        <segue reference="96J-Xg-akz"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="now_playing_tabbar_item" width="21" height="21"/>
