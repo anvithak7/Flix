@@ -12,7 +12,12 @@
 
 @interface MoviesGridViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (nonatomic, strong) NSArray *movies;
+// @property (nonatomic, strong) NSMutableArray *data;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet UISearchBar *movieSearchBar;
+// @property (strong, nonatomic) NSArray *filteredData;
+// @property (nonatomic) BOOL searchBarOn;
+// data and filteredData are part of the attempt to create a search bar.
 
 @end
 
@@ -23,6 +28,7 @@
     // Do any additional setup after loading the view.
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
+    self.movieSearchBar.delegate = self;
     [self fetchMovies];
     // We're setting the sizes of the items.
     // The width of the collectionView will change according to the size of the phone.
@@ -33,6 +39,7 @@
     CGFloat itemWidth = (self.collectionView.frame.size.width - layout.minimumInteritemSpacing * (postersPerRow - 1)) / postersPerRow;
     CGFloat itemHeight = 1.5 * itemWidth;
     layout.itemSize = CGSizeMake(itemWidth, itemHeight);
+    // self.filteredData = self.data;
 }
 
 - (void)fetchMovies {
@@ -112,5 +119,31 @@
     return self.movies.count;
 }
 
+/* More search bar functionality that does not work yet.
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    if (searchText.length != 0) {
+        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(NSString *evaluatedObject, NSDictionary *bindings) {
+            return [evaluatedObject containsString:searchText];
+        }];
+        self.filteredData = [self.movies filteredArrayUsingPredicate:predicate];
+        NSLog(@"%@", self.filteredData);
+    }
+    else {
+        self.filteredData = self.movies;
+    }
+    [self.collectionView reloadData];
+ 
+}
+ */
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    self.movieSearchBar.showsCancelButton = YES;
+}
+
+ - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    self.movieSearchBar.showsCancelButton = NO;
+    self.movieSearchBar.text = @"";
+    [self.movieSearchBar resignFirstResponder];
+}
 
 @end

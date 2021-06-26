@@ -86,7 +86,7 @@
             </objects>
             <point key="canvasLocation" x="138" y="818"/>
         </scene>
-        <!--Popular Movies-->
+        <!--Movies-->
         <scene sceneID="a1C-T2-CNR">
             <objects>
                 <viewController id="v9q-0j-dSY" customClass="MoviesGridViewController" sceneMemberID="viewController">
@@ -136,9 +136,10 @@
                         <viewLayoutGuide key="safeArea" id="Yp0-Kx-sXT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Popular Movies" id="6RJ-R8-roy"/>
+                    <navigationItem key="navigationItem" title="Movies" id="6RJ-R8-roy"/>
                     <connections>
                         <outlet property="collectionView" destination="ZcQ-5M-aVz" id="WbR-8x-d1s"/>
+                        <outlet property="movieSearchBar" destination="PSB-M9-SFu" id="M4U-ar-gxX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JRP-SB-jkJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
