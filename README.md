@@ -44,7 +44,7 @@ Please list two areas of the assignment you'd like to **discuss further with you
 Here's a walkthrough of implemented user stories:
 
 <img src='http://g.recordit.co/cGmY98LexY.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
-
+<blockquote lang="en"><a href="http://g.recordit.co/cGmY98LexY.gif">Flix</a></blockquote>
 GIF created with [Kap](https://getkap.co/).
 
 ## Notes
