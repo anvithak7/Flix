@@ -46,6 +46,7 @@ Here's a walkthrough of implemented user stories:
 <img src='http://g.recordit.co/cGmY98LexY.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 <img src='http://g.recordit.co/ga7atNX9lU.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 <blockquote lang="en"><a href="http://g.recordit.co/cGmY98LexY.gif">Flix</a></blockquote>
+<blockquote lang="en"><a href="http://g.recordit.co/ga7atNX9lU.gif">Flix Features</a></blockquote>
 <blockquote class="imgur-embed-pub" lang="en" data-id="a/APjGYm5"  ><a href="//imgur.com/a/APjGYm5">Flix - Without Wifi</a></blockquote>
 GIF created with [Kap](https://getkap.co/).
 
