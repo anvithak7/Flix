@@ -8,7 +8,9 @@
 #import "MoviesViewController.h"
 #import "DetailsViewController.h"
 #import "MovieCell.h"
+#import "Movie.h"
 #import "UIImageView+AFNetworking.h"
+#import "MovieAPIManager.h"
 
 @interface MoviesViewController () <UITableViewDataSource, UITableViewDelegate>
 // The above says that this class implements the two protocols there and their required methods.
@@ -19,7 +21,7 @@
 // No garbage collector, so we have to use reference counting.
 // Incrememnt reference counter of movies so it doesn't go away (with strong, increments retain count).
 // Most things are nonatomic (very rarely otherwise).
-@property (nonatomic, strong) NSArray *movies; // Creates a private instance variable with a getter and setter method.
+@property (nonatomic, strong) NSMutableArray *movies; // Creates a private instance variable with a getter and setter method.
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
@@ -42,66 +44,44 @@
 }
 
 - (void)fetchMovies {
-    // The loading indicator starts up when something is loading/fetching from network.
-    NSURL *url = [NSURL URLWithString:@"https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed"];
-    // In the above, whichever URL you want to get data from.
-    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10.0];
-    // The request ignores cache data because we always want to see it reload.
-    // In real life, we might want to cache things that are relevant to load it quicker for the user.
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:nil delegateQueue:[NSOperationQueue mainQueue]];
-    // In the below, ^() is the syntax for a block.
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        // The lines below happen once the network call is finished.
-        // Network call has to be done in the background, or in the foreground thread would feel like user was frozen.
-           if (error != nil) {
-               UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Unable to Load Movies" message:@"The internet connection appears to be offline. Please reconnect and try again!" preferredStyle:(UIAlertControllerStyleAlert)];
-               
-               UIAlertAction *tryAgainAction = [UIAlertAction actionWithTitle:@"Try Again"
-                                                                   style:UIAlertActionStyleDefault
-                                                                 handler:^(UIAlertAction * _Nonnull action) { [self fetchMovies];
-                   // handle cancel response here. Doing nothing will dismiss the view.
-                                                                 }];
-               [alert addAction:tryAgainAction];
-               
-               // The below was the given code, but I wanted to do a try again button instead! (above)
-               /*// create a cancel action
-               UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
-                                                                   style:UIAlertActionStyleCancel
-                                                                 handler:^(UIAlertAction * _Nonnull action) {
-                                                                        // handle cancel response here. Doing nothing will dismiss the view.
-                                                                 }];
-               // add the cancel action to the alertController
-               [alert addAction:cancelAction];
-               // create an OK action
-               UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
-                                                                  style:UIAlertActionStyleDefault
-                                                                handler:^(UIAlertAction * _Nonnull action) {
-                                                                        // handle response here.
-                                                                }];
-               // add the OK action to the alert controller
-               [alert addAction:okAction]; */
-               [self presentViewController:alert animated:YES completion:^{
-                   // optional code for what happens after the alert controller has finished presenting
-               }];
-               NSLog(@"%@", [error localizedDescription]); // If there's an error, print it out.
-           }
-           else { // The API gave us something back! In the form of a dictionary!
-               NSDictionary *dataDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-               // %@ means specifying an object.
-               NSLog(@"%@", dataDictionary);
-               self.movies = dataDictionary[@"results"];
-               for (NSDictionary *movie in self.movies) {
-                   NSLog(@"%@", movie[@"title"]);
-               }
-               [self.tableView reloadData];
-               // Get the array of movies
-               // Store the movies in a property to use elsewhere
-               // Reload your table view data
-           }
+    MovieAPIManager *manager = [MovieAPIManager new];
+    [manager fetchNowPlaying:^(NSMutableArray *movies, NSError *error) {
+        if (error) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Unable to Load Movies" message:@"The internet connection appears to be offline. Please reconnect and try again!" preferredStyle:(UIAlertControllerStyleAlert)];
+            
+            UIAlertAction *tryAgainAction = [UIAlertAction actionWithTitle:@"Try Again"
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * _Nonnull action) { [self fetchMovies];
+                // handle cancel response here. Doing nothing will dismiss the view.
+                                                              }];
+            [alert addAction:tryAgainAction];
+            
+            // The below was the given code, but I wanted to do a try again button instead! (above)
+            /*// create a cancel action
+            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                                style:UIAlertActionStyleCancel
+                                                              handler:^(UIAlertAction * _Nonnull action) {
+                                                                     // handle cancel response here. Doing nothing will dismiss the view.
+                                                              }];
+            // add the cancel action to the alertController
+            [alert addAction:cancelAction];
+            // create an OK action
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                               style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction * _Nonnull action) {
+                                                                     // handle response here.
+                                                             }];
+            // add the OK action to the alert controller
+            [alert addAction:okAction]; */
+            [self presentViewController:alert animated:YES completion:^{
+                // optional code for what happens after the alert controller has finished presenting
+            }];
+        }
+        self.movies = movies;
+        [self.tableView reloadData];
         [self.refreshControl endRefreshing];
         [self.loadingIndicator stopAnimating];
-       }];
-    [task resume];
+    }];
 }
 // Called a few times on startup, and then never again.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -117,39 +97,7 @@
     // Below, we're setting all the values in each cell by taking the appropriate value from the dictionary for each movie.
     // The loading indicator pops up when the images and cell values are loading.
     [self.loadingIndicator startAnimating];
-    NSDictionary *movie = self.movies[indexPath.row];
-    cell.titleLabel.text = movie[@"title"];
-    cell.synopsisLabel.text = movie[@"overview"];
-    NSString *baseURLString = @"https:image.tmdb.org/t/p/w500";
-    NSString *posterURLString = movie[@"poster_path"];
-    NSString *fullPosterURLString = [baseURLString stringByAppendingString:posterURLString];
-    NSURL *posterURL = [NSURL URLWithString:fullPosterURLString];
-    cell.posterView.image = nil; // Clear out the previous one before downloading the new one.
-    // The below is the code that causes the images to fade in when loading in from the network.
-    NSURLRequest *request = [NSURLRequest requestWithURL:posterURL];
-    __weak MovieCell *weakSelf = cell;
-    [cell.posterView setImageWithURLRequest:request placeholderImage:nil
-                                    success:^(NSURLRequest *imageRequest, NSHTTPURLResponse *imageResponse, UIImage *image) {
-                                        
-                                        // imageResponse will be nil if the image is cached
-                                        if (imageResponse) {
-                                            NSLog(@"Image was NOT cached, fade in image");
-                                            weakSelf.posterView.alpha = 0.0;
-                                            weakSelf.posterView.image = image;
-                                            
-                                            //Animate UIImageView back to alpha 1 over 0.3sec
-                                            [UIView animateWithDuration:0.1 animations:^{
-                                                weakSelf.posterView.alpha = 1.0;
-                                            }];
-                                        }
-                                        else {
-                                            NSLog(@"Image was cached so just update the image");
-                                            weakSelf.posterView.image = image;
-                                        }
-                                    }
-                                    failure:^(NSURLRequest *request, NSHTTPURLResponse * response, NSError *error) {
-                                        // do something for the failure condition
-                                    }];
+    cell.movie = self.movies[indexPath.row];
     [self.loadingIndicator stopAnimating];
     return cell;
 }
@@ -162,7 +110,7 @@
     // Pass the selected object to the new view controller.
     UITableViewCell *tappedCell = sender;
     NSIndexPath *indexPath = [self.tableView indexPathForCell:tappedCell];
-    NSDictionary *movie = self.movies[indexPath.row];
+    Movie *movie = self.movies[indexPath.row];
     DetailsViewController *detailViewController = [segue destinationViewController];
     detailViewController.movie = movie; // Passing over movie to next view controller.
     NSLog(@"Tapping on a movie!");

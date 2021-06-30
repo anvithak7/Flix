@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MoviesViewController : UIViewController
 
+- (void)fetchMovies;
+
 @end
 
 NS_ASSUME_NONNULL_END
